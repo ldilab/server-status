@@ -5,7 +5,7 @@ FROM python:3.10-alpine
 RUN apk add build-base linux-headers
 RUN apk add --no-cache gcc
 
-WORKDIR /
+WORKDIR /src
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
