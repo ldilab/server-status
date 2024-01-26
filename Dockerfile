@@ -2,7 +2,7 @@
 
 FROM python:3.10-alpine
 
-RUN apt-get install gcc
+RUN apk add --no-cache gcc
 
 WORKDIR /
 
