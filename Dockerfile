@@ -2,6 +2,8 @@
 
 FROM python:3.10-alpine
 
+RUN apt-get install gcc
+
 WORKDIR /
 
 COPY requirements.txt requirements.txt
