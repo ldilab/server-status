@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.10-alpine
+FROM nvidia/cuda:11.0-base
 
 RUN apk add build-base linux-headers
 
