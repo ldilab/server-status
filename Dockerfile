@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM nvcr.io/nvidia/cuda:11.6.1-base-ubuntu20.04
+FROM nvcr.io/nvidia/cuda:11.0.3-base-ubuntu20.04
 
 RUN apt-get -y update \
     && apt-get install -y software-properties-common  \
