@@ -2,6 +2,7 @@ import os
 import time
 from os.path import join, dirname
 
+import flask
 from dotenv import load_dotenv
 from flask import Flask
 from flask_httpauth import HTTPBasicAuth
@@ -35,7 +36,9 @@ def hello_world():
     if current_time - inspector.last_update > inspector.update_interval:
         inspector.update()
 
-    return inspector.get_all_info()
+    return flask.jsonify(
+        inspector.get_all_info()
+    )
 
 
 if __name__ == "__main__":
