@@ -51,6 +51,17 @@ while True:
     import docker
     docker_client = docker.from_env()
     dockers = docker_client.containers.list()
+    print("-" * 50)
+    for docker in dockers:
+        print("-" * 50)
+        print(f"ID: {docker.id}")
+        print(f"Name: {docker.name}")
+        print(f"Image: {docker.image}")
+        print(f"Status: {docker.status}")
+        print(f"Ports: {docker.ports}")
+        print(f"Mounts: {docker.attrs['Mounts']}")
+        print(f"NetworkSettings: {docker.attrs['NetworkSettings']}")
+        print(f"State: {docker.attrs['State']}")
 
     time.sleep(1)
 
