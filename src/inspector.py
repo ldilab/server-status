@@ -178,7 +178,8 @@ class Monitor:
             for docker_container in docker_containers:
                 dynamic_docker_container_infos[docker_container.id] = {
                     "name": docker_container.name,
-                    "image": docker_container.image,
+                    "image_tag": docker_container.image.tags,
+                    "image_label": docker_container.image.labels,
                     "status": docker_container.status,
                     "ports": docker_container.ports,
                     "mounts": docker_container.attrs['Mounts'],
