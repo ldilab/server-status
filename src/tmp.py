@@ -47,13 +47,6 @@ while True:
         print(f"Serial: {gpu.serial}")
         print(f"DisplayMode: {gpu.display_mode}")
         print(f"DisplayActive: {gpu.display_active}")
-        print(f"AccountingMode: {gpu.accounting_mode}")
-        print(f"AccountingBuffers: {gpu.accounting_buffers}")
-        print(f"AccountingMaxMemoryUsage: {gpu.accounting_max_memory_usage}")
-        print(f"AccountingMaxMemoryUsage: {gpu.accounting_max_memory_usage}")
-        print(f"AccountingMemoryUsage: {gpu.accounting_memory_usage}")
-        print(f"AccountingUtilizationGPU: {gpu.accounting_utilization_gpu}")
-        print(f"AccountingUtilizationMemory: {gpu.accounting_utilization_memory}")
 
     import docker
     docker_client = docker.from_env()

@@ -3,7 +3,7 @@
 FROM nvcr.io/nvidia/cuda:11.0.3-base-ubuntu20.04
 
 RUN apt-get -y update \
-    && apt-get install -y software-properties-common \
+    && apt-get install -y software-properties-common docker.io \
     && apt-get -y update \
     && add-apt-repository universe
 RUN apt-get -y update
