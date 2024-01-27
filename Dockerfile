@@ -3,7 +3,6 @@
 FROM python:3.10-alpine
 
 RUN apk add build-base linux-headers
-RUN apk add --no-cache gcc
 
 WORKDIR /app
 
