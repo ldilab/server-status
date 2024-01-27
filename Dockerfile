@@ -1,9 +1,8 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.10-alpine
+FROM nvcr.io/nvidia/cuda:11.0.3-base-ubuntu20.04
 
 RUN apk add build-base linux-headers
-RUN apk --update add --no-cache nvidia-utils
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
