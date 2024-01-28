@@ -183,6 +183,7 @@ class Monitor:
                     "status": docker_container.status,
                     "mounts": docker_container.attrs['Mounts'],
                     "state": docker_container.attrs['State'],
+                    "stats": docker_container.stats(stream=False),
                 }
         except:
             dynamic_docker_container_infos = {}
@@ -202,7 +203,6 @@ class Monitor:
                     "tags": docker_image.tags,
                     "short_id": docker_image.short_id,
                     "labels": docker_image.labels,
-                    "attrs": docker_image.attrs
                 }
         except:
             dynamic_docker_image_infos = {}
