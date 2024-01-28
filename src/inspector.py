@@ -184,7 +184,7 @@ class Monitor:
                     "status": docker_container.status,
                     "mounts": docker_container.attrs['Mounts'],
                     "state": docker_container.attrs['State'],
-                    "stats": docker_container.stats(stream=False, one_shot=True),
+                    # "stats": docker_container.stats(stream=False, one_shot=True),
                 }
         except:
             dynamic_docker_container_infos = {}
