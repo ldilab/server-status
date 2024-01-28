@@ -3,6 +3,7 @@ import time
 from os.path import join, dirname
 
 import flask
+import requests
 from dotenv import load_dotenv
 from flask import Flask
 from flask_httpauth import HTTPBasicAuth
@@ -21,6 +22,11 @@ users = {
     os.environ.get("username"): generate_password_hash(os.environ.get("password"))
 }
 
+subs = {
+    node: port
+    for node, port in zip(os.environ.get("nodes").split(","), os.environ.get("ports").split(","))
+}
+
 
 @auth.verify_password
 def verify_password(username, password):
@@ -31,7 +37,7 @@ def verify_password(username, password):
 
 @app.route("/")
 @auth.login_required
-def hello_world():
+def my_status():
     current_time = time.time()
     if current_time - inspector.last_update > inspector.update_interval:
         inspector.update()
@@ -39,6 +45,16 @@ def hello_world():
     return flask.jsonify(
         inspector.get_all_info()
     )
+
+
+@app.route("/<node>")
+@auth.login_required
+def node_status(node):
+    current_time = time.time()
+    if current_time - inspector.last_update > inspector.update_interval:
+        inspector.update()
+
+    return requests.get(f"http://{node}:{subs[node]}/").json()
 
 
 if __name__ == "__main__":
