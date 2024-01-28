@@ -4,7 +4,8 @@ services:
   flask:
     privileged: true
     build:
-      dockerfile: ./Dockerfile-cpu
+      context: ./
+      dockerfile: Dockerfile-cpu
 
     ipc: host
     restart: always

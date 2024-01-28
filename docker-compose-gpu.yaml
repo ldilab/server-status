@@ -3,7 +3,9 @@ version: '3.9'
 services:
   flask:
     privileged: true
-    build: .
+    build:
+      context: ./
+      dockerfile: Dockerfile-gpu
     deploy:
       resources:
         reservations:
