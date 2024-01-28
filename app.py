@@ -54,7 +54,7 @@ def node_status(node):
     if current_time - inspector.last_update > inspector.update_interval:
         inspector.update()
 
-    return requests.get(f"http://{node}:{subs[node]}/", auth=auth.get_auth()).json()
+    return requests.get(f"http://{node}:{subs[node]}/", auth=tuple(auth.get_auth().parameters.values())).json()
 
 
 if __name__ == "__main__":
