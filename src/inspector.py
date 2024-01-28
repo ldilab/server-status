@@ -181,10 +181,8 @@ class Monitor:
                     "image_tag": docker_container.image.tags,
                     "image_label": docker_container.image.labels,
                     "status": docker_container.status,
-                    "ports": docker_container.ports,
                     "mounts": docker_container.attrs['Mounts'],
-                    "network_settings": docker_container.attrs['NetworkSettings'],
-                    "state": docker_container.attrs['State']
+                    "state": docker_container.attrs['State'],
                 }
         except:
             dynamic_docker_container_infos = {}
