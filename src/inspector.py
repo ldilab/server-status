@@ -175,6 +175,7 @@ class Monitor:
         try:
             docker_containers = self.docker_client.containers.list()
             dynamic_docker_container_infos = {}
+
             for docker_container in docker_containers:
                 dynamic_docker_container_infos[docker_container.id] = {
                     "name": docker_container.name,
@@ -183,7 +184,7 @@ class Monitor:
                     "status": docker_container.status,
                     "mounts": docker_container.attrs['Mounts'],
                     "state": docker_container.attrs['State'],
-                    "stats": docker_container.stats(stream=False),
+                    "stats": docker_container.stats(stream=False, one_shot=True),
                 }
         except:
             dynamic_docker_container_infos = {}
