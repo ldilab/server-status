@@ -1,4 +1,5 @@
 import time
+import datetime
 
 import docker
 import psutil
@@ -224,8 +225,13 @@ class Monitor:
         self.last_update = time.time()
 
     def get_all_info(self):
+        # timezone from UTC+0 to Asia/seoul
+        last_update = datetime.datetime.fromtimestamp(
+            self.last_update, tz=datetime.timezone(datetime.timedelta(hours=9))
+        )
+
         return {
-            "last_update": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.last_update)),
+            "last_update": last_update.strftime('%Y-%m-%d %H:%M:%S %Z'),
             "cpu": self.cpu,
             "memory": self.memory,
             "disks": self.disks,
