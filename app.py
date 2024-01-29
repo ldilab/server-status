@@ -22,10 +22,13 @@ users = {
     os.environ.get("username"): generate_password_hash(os.environ.get("password"))
 }
 
-subs = {
-    node: port
-    for node, port in zip(os.environ.get("nodes").split(","), os.environ.get("ports").split(","))
-}
+if os.environ.get("nodes") is not None:
+    subs = {
+        node: port
+        for node, port in zip(os.environ.get("nodes").split(","), os.environ.get("ports").split(","))
+    }
+else:
+    subs = {}
 
 
 @auth.verify_password
@@ -50,6 +53,13 @@ def my_status():
 @app.route("/<node>")
 @auth.login_required
 def node_status(node):
+    if node not in subs:
+        return flask.jsonify(
+            {
+                "error": "Node not found"
+            }
+        )
+
     current_time = time.time()
     if current_time - inspector.last_update > inspector.update_interval:
         inspector.update()
