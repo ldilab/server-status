@@ -130,7 +130,7 @@ class Monitor:
                         "raw": self.system_client.disk_usage(disk.mountpoint).used
                     },
                     "free": {
-                        "percent": self.system_client.disk_usage(disk.mountpoint).free,
+                        "percent": self.system_client.disk_usage(disk.mountpoint).percent,
                         "raw": self.system_client.disk_usage(disk.mountpoint).free
                     },
                 }
