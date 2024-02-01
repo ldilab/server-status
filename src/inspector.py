@@ -195,6 +195,7 @@ class Monitor:
             dynamic_docker_container_infos = {}
 
             for docker_container in docker_containers:
+                stats = docker_container.stats(stream=False, one_shot=True)
                 dynamic_docker_container_infos[docker_container.id] = {
                     "name": docker_container.name,
                     "image_tag": docker_container.image.tags,
@@ -202,6 +203,14 @@ class Monitor:
                     "status": docker_container.status,
                     "mounts": docker_container.attrs['Mounts'],
                     "state": docker_container.attrs['State'],
+                    "pids": stats['pids_stats']['current'],
+                    "mem_free": {
+                        "percent": 1 - stats['memory_stats']['usage'] / stats['memory_stats']['limit'] * 100,
+                        "raw": stats['memory_stats']['limit'] - stats['memory_stats']['usage']
+                    },
+                    "network_rx": stats['networks']['eth0']['rx_bytes'],
+                    "network_tx": stats['networks']['eth0']['tx_bytes'],
+
                     # "stats": docker_container.stats(stream=False, one_shot=True),
                 }
         except:
