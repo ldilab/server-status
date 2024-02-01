@@ -26,4 +26,5 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/hosts:/etc/hosts:ro
+      - /:/host:ro,rslave
 
