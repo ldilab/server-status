@@ -54,8 +54,14 @@ class Monitor:
             pass
 
     def _set_disk_init_info(self):
+        wanted_fs = ["ext4", "ext3", "ext2", "ext1", "xfs", "btrfs", "nfs"]
         try:
-            disks = self.system_client.disk_partitions()
+            all_disks = self.system_client.disk_partitions(all=True)
+            root_disk = filter(lambda disk: disk.mountpoint == "/", all_disks)
+            host_disks = filter(lambda disk: disk.mountpoint.startswith("/host"), all_disks)
+            host_disks = filter(lambda disk: disk.fstype in wanted_fs, host_disks)
+            disks = list(root_disk) + list(host_disks)
+
             for disk in disks:
                 self.disk_infos[disk.mountpoint] = {
                     "device": disk.device,
@@ -98,18 +104,18 @@ class Monitor:
         try:
             mem = self.system_client.virtual_memory()
             dynamic_memory_infos = {
-                "used": {
-                    "percent": round(mem.used / mem.total * 100, 2),
-                    "raw": mem.used
-                },
+                # "used": {
+                #     "percent": round(mem.used / mem.total * 100, 2),
+                #     "raw": mem.used
+                # },
                 "available": {
                     "percent": round(mem.available / mem.total * 100, 2),
                     "raw": mem.available
                 },
-                "free": {
-                    "percent": round(mem.free / mem.total * 100, 2),
-                    "raw": mem.free
-                },
+                # "free": {
+                #     "percent": round(mem.free / mem.total * 100, 2),
+                #     "raw": mem.free
+                # },
             }
         except:
             dynamic_memory_infos = {}
@@ -120,17 +126,23 @@ class Monitor:
         }
 
     def get_disk_info(self) -> dict:
+        wanted_fs = ["ext4", "ext3", "ext2", "ext1", "xfs", "btrfs", "nfs"]
         try:
-            disks = self.system_client.disk_partitions()
+            all_disks = self.system_client.disk_partitions(all=True)
+            root_disk = filter(lambda disk: disk.mountpoint == "/", all_disks)
+            host_disks = filter(lambda disk: disk.mountpoint.startswith("/host"), all_disks)
+            host_disks = filter(lambda disk: disk.fstype in wanted_fs, host_disks)
+            disks = list(root_disk) + list(host_disks)
+
             dynamic_disk_infos = {}
             for disk in disks:
                 dynamic_disk_infos[disk.mountpoint] = {
-                    "used": {
-                        "percent": self.system_client.disk_usage(disk.mountpoint).percent,
-                        "raw": self.system_client.disk_usage(disk.mountpoint).used
-                    },
+                    # "used": {
+                    #     "percent": self.system_client.disk_usage(disk.mountpoint).percent,
+                    #     "raw": self.system_client.disk_usage(disk.mountpoint).used
+                    # },
                     "free": {
-                        "percent": self.system_client.disk_usage(disk.mountpoint).percent,
+                        "percent": 100 - self.system_client.disk_usage(disk.mountpoint).percent,
                         "raw": self.system_client.disk_usage(disk.mountpoint).free
                     },
                 }
@@ -148,14 +160,14 @@ class Monitor:
             dynamic_gpu_infos = {}
             for gpu in gpus:
                 dynamic_gpu_infos[gpu.id] = {
-                    "load": {
-                        "percent": gpu.memoryUtil * 100,
-                        "raw": gpu.load,
-                    },
-                    "used": {
-                        "percent": gpu.memoryUsed / gpu.memoryTotal * 100,
-                        "raw": gpu.memoryUsed
-                    },
+                    # "load": {
+                    #     "percent": gpu.memoryUtil * 100,
+                    #     "raw": gpu.load,
+                    # },
+                    # "used": {
+                    #     "percent": gpu.memoryUsed / gpu.memoryTotal * 100,
+                    #     "raw": gpu.memoryUsed
+                    # },
                     "free": {
                         "percent": gpu.memoryFree / gpu.memoryTotal * 100,
                         "raw": gpu.memoryFree
@@ -181,7 +193,7 @@ class Monitor:
                 dynamic_docker_container_infos[docker_container.id] = {
                     "name": docker_container.name,
                     "image_tag": docker_container.image.tags,
-                    "image_label": docker_container.image.labels,
+                    # "image_label": docker_container.image.labels,
                     "status": docker_container.status,
                     "mounts": docker_container.attrs['Mounts'],
                     "state": docker_container.attrs['State'],
@@ -204,7 +216,7 @@ class Monitor:
                     "id": docker_image.id,
                     "tags": docker_image.tags,
                     "short_id": docker_image.short_id,
-                    "labels": docker_image.labels,
+                    # "labels": docker_image.labels,
                 }
         except:
             dynamic_docker_image_infos = {}
