@@ -62,7 +62,7 @@ class Monitor:
             disks = list(host_disks)
 
             for disk in disks:
-                mount_point = disk.mountpoint.replace("/host", "/")
+                mount_point = disk.mountpoint.replace("/host", "")
                 self.disk_infos[mount_point] = {
                     "device": disk.device,
                     "mount": mount_point,
@@ -136,7 +136,7 @@ class Monitor:
 
             dynamic_disk_infos = {}
             for disk in disks:
-                mount_point = disk.mountpoint.replace("/host", "/")
+                mount_point = disk.mountpoint.replace("/host", "")
                 dynamic_disk_infos[mount_point] = {
                     # "used": {
                     #     "percent": self.system_client.disk_usage(disk.mountpoint).percent,
