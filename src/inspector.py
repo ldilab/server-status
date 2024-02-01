@@ -59,14 +59,13 @@ class Monitor:
             all_disks = self.system_client.disk_partitions(all=True)
             host_disks = filter(lambda disk: disk.mountpoint.startswith("/host"), all_disks)
             host_disks = filter(lambda disk: disk.fstype in wanted_fs, host_disks)
-            host_disks = map(lambda disk: disk.mountpoint.replace("/host", ""), host_disks)
-
             disks = list(host_disks)
 
             for disk in disks:
-                self.disk_infos[disk.mountpoint] = {
+                mount_point = disk.mountpoint.replace("/host", "/")
+                self.disk_infos[mount_point] = {
                     "device": disk.device,
-                    "mount": disk.mountpoint,
+                    "mount": mount_point,
                     "fstype": disk.fstype,
                     "total": self.system_client.disk_usage(disk.mountpoint).total
                 }
@@ -132,13 +131,13 @@ class Monitor:
             all_disks = self.system_client.disk_partitions(all=True)
             host_disks = filter(lambda disk: disk.mountpoint.startswith("/host"), all_disks)
             host_disks = filter(lambda disk: disk.fstype in wanted_fs, host_disks)
-            host_disks = map(lambda disk: disk.mountpoint.replace("/host", ""), host_disks)
 
             disks = list(host_disks)
 
             dynamic_disk_infos = {}
             for disk in disks:
-                dynamic_disk_infos[disk.mountpoint] = {
+                mount_point = disk.mountpoint.replace("/host", "/")
+                dynamic_disk_infos[mount_point] = {
                     # "used": {
                     #     "percent": self.system_client.disk_usage(disk.mountpoint).percent,
                     #     "raw": self.system_client.disk_usage(disk.mountpoint).used
