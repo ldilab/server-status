@@ -132,6 +132,8 @@ class Monitor:
             root_disk = filter(lambda disk: disk.mountpoint == "/", all_disks)
             host_disks = filter(lambda disk: disk.mountpoint.startswith("/host"), all_disks)
             host_disks = filter(lambda disk: disk.fstype in wanted_fs, host_disks)
+            host_disks = map(lambda disk: disk.mountpoint.replace("/host", ""), host_disks)
+
             disks = list(root_disk) + list(host_disks)
 
             dynamic_disk_infos = {}
