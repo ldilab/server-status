@@ -2,6 +2,7 @@ import time
 import datetime
 
 import docker
+import gpustat
 import psutil
 from GPUtil import GPUtil
 
@@ -160,10 +161,31 @@ class Monitor:
 
     def get_gpu_info(self) -> dict:
         try:
-            gpus = self.gpu_client.getGPUs()
+            gpus = gpustat.cli.print_gpustat(json=True)
             dynamic_gpu_infos = {}
             for gpu in gpus:
-                dynamic_gpu_infos[gpu.id] = {
+                gpu_id = gpu["index"]
+                gpu_used = gpu["memory.used"]
+                gpu_total = gpu["memory.total"]
+                gpu_free = gpu_total - gpu_used
+                temperature = gpu["temperature.gpu"]
+                command = ""
+                for idx, process in enumerate(gpu["processes"]):
+                    command += \
+                 f"""
+<p>
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample{idx}" role="button" aria-expanded="false" aria-controls="collapseExample{idx}">
+    {gpu["command"]}
+  </a>
+</p>
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    {" ".join(gpu["full_command"])}
+  </div>
+</div>
+"""
+
+                dynamic_gpu_infos[str(gpu_id)] = {
                     # "load": {
                     #     "percent": gpu.memoryUtil * 100,
                     #     "raw": gpu.load,
@@ -173,12 +195,13 @@ class Monitor:
                     #     "raw": gpu.memoryUsed
                     # },
                     "free": {
-                        "percent": gpu.memoryFree / gpu.memoryTotal * 100,
-                        "raw": gpu.memoryFree
+                        "percent": gpu_free / gpu_total * 100,
+                        "raw": gpu_free
                     },
                     "temperature": {
-                        "raw": gpu.temperature
-                    }
+                        "raw": temperature
+                    },
+                    "command": command
                 }
         except:
             dynamic_gpu_infos = {}
