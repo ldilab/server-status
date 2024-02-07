@@ -190,11 +190,12 @@ class Monitor:
         }
 
     def get_docker_container_info(self) -> dict:
-        try:
-            docker_containers = self.docker_client.containers.list()
-            dynamic_docker_container_infos = {}
 
-            for docker_container in docker_containers:
+        docker_containers = self.docker_client.containers.list()
+        dynamic_docker_container_infos = {}
+
+        for docker_container in docker_containers:
+            try:
                 stats = docker_container.stats(stream=False, one_shot=True)
                 dynamic_docker_container_infos[docker_container.id] = {
                     "name": docker_container.name,
@@ -217,9 +218,9 @@ class Monitor:
 
                     "cpu_usage": stats['cpu_stats']['cpu_usage']['total_usage'] / stats['cpu_stats']['system_cpu_usage'] * 100,
                     # "stats": docker_container.stats(stream=False, one_shot=True),
-                }
-        except:
-            dynamic_docker_container_infos = {}
+                    }
+            except:
+                dynamic_docker_container_infos[docker_container.id] = {}
 
         return {
             "dynamic": dynamic_docker_container_infos,
