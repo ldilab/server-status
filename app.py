@@ -10,8 +10,10 @@ from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from src.inspector import Monitor
+from flask_apscheduler import APScheduler
 
 app = Flask(__name__)
+scheduler = APScheduler()
 auth = HTTPBasicAuth()
 inspector = Monitor(update_interval=30)
 
@@ -31,6 +33,11 @@ else:
     subs = {}
 
 
+@scheduler.task('interval', id='self_update', seconds=inspector.update_interval)
+def my_job():
+    inspector.update()
+
+
 @auth.verify_password
 def verify_password(username, password):
     if username in users and \
@@ -41,10 +48,6 @@ def verify_password(username, password):
 @app.route("/")
 @auth.login_required
 def my_status():
-    current_time = time.time()
-    if current_time - inspector.last_update > inspector.update_interval:
-        inspector.update()
-
     return flask.jsonify(
         inspector.get_all_info()
     )
@@ -69,4 +72,8 @@ def node_status(node):
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
+
+    scheduler.init_app(app)
+    scheduler.start()
+
     app.run(debug=True, host='0.0.0.0', port=port)
