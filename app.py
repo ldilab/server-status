@@ -13,7 +13,7 @@ from src.inspector import Monitor
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
-inspector = Monitor(update_interval=10)
+inspector = Monitor(update_interval=30)
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
