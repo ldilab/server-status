@@ -39,7 +39,6 @@ class Monitor:
         self.docker_containers = {}
         self.docker_images = {}
 
-
     def _set_cpu_init_info(self):
         try:
             self.cpu_infos["cpu_count"] = self.system_client.cpu_count()
@@ -190,21 +189,27 @@ class Monitor:
         }
 
     def get_docker_container_info(self) -> dict:
-
-        docker_containers = self.docker_client.containers.list()
+        try:
+            docker_containers = self.docker_client.containers.list()
+        except:
+            return {
+                "dynamic": {},
+                "static": self.docker_container_infos
+            }
         dynamic_docker_container_infos = {}
-
         for docker_container in docker_containers:
+            container_info = {
+                "name": docker_container.name,
+                "image_tag": docker_container.image.tags,
+                # "image_label": docker_container.image.labels,
+                "status": docker_container.status,
+                "mounts": docker_container.attrs['Mounts'],
+                "state": docker_container.attrs['State'],
+            }
+
             try:
                 stats = docker_container.stats(stream=False, one_shot=True)
-                dynamic_docker_container_infos[docker_container.id] = {
-                    "name": docker_container.name,
-                    "image_tag": docker_container.image.tags,
-                    # "image_label": docker_container.image.labels,
-                    "status": docker_container.status,
-                    "mounts": docker_container.attrs['Mounts'],
-                    "state": docker_container.attrs['State'],
-
+                container_info.update({
                     "pids": stats['pids_stats']['current'],
                     "mem_usage": stats['memory_stats']['usage'],
                     "mem_limit": stats['memory_stats']['limit'],
@@ -216,11 +221,14 @@ class Monitor:
                     "read_bytes": stats['blkio_stats']['io_service_bytes_recursive'][0]['value'],
                     "write_bytes": stats['blkio_stats']['io_service_bytes_recursive'][1]['value'],
 
-                    "cpu_usage": stats['cpu_stats']['cpu_usage']['total_usage'] / stats['cpu_stats']['system_cpu_usage'] * 100,
+                    "cpu_usage": stats['cpu_stats']['cpu_usage']['total_usage'] / stats['cpu_stats'][
+                        'system_cpu_usage'] * 100,
                     # "stats": docker_container.stats(stream=False, one_shot=True),
-                    }
+                })
             except:
-                dynamic_docker_container_infos[docker_container.id] = {}
+                pass
+
+            dynamic_docker_container_infos[docker_container.id] = container_info
 
         return {
             "dynamic": dynamic_docker_container_infos,
