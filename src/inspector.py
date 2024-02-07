@@ -161,7 +161,7 @@ class Monitor:
 
     def get_gpu_info(self) -> dict:
         try:
-            gpus = gpustat.cli.print_gpustat(json=True)
+            gpus = gpustat.cli.print_gpustat(json=True)["gpus"]
             dynamic_gpu_infos = {}
             for gpu in gpus:
                 gpu_id = gpu["index"]
