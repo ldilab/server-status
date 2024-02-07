@@ -70,10 +70,11 @@ def node_status(node):
     return requests.get(f"http://{node}:{subs[node]}/", auth=tuple(auth.get_auth().parameters.values())).json()
 
 
+scheduler.init_app(app)
+scheduler.start()
+
+
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
-
-    scheduler.init_app(app)
-    scheduler.start()
 
     app.run(debug=True, host='0.0.0.0', port=port)
