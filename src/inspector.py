@@ -1,5 +1,7 @@
+import json
 import time
 import datetime
+from io import StringIO
 
 import docker
 import gpustat
@@ -161,7 +163,11 @@ class Monitor:
 
     def get_gpu_info(self) -> dict:
         try:
-            gpus = gpustat.cli.print_gpustat(json=True)["gpus"]
+            gpustats = gpustat.new_query()
+            fp = StringIO()
+            gpustats.print_json(fp=fp)
+            gpu_all = json.loads(fp.getvalue())
+            gpus = gpu_all["gpus"]
             dynamic_gpu_infos = {}
             for gpu in gpus:
                 gpu_id = gpu["index"]
