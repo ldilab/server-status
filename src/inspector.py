@@ -179,16 +179,19 @@ class Monitor:
                 for idx, process in enumerate(gpu["processes"]):
                     command += \
                  f"""
-<button class="btn d-inline-flex align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#collapseExample{idx}" aria-expanded="false" aria-current="false">
-{idx}: {process["command"]}
-</button>
-<div class="collapse" id="collapseExample{idx}" style="">
-<ul class="list-unstyled fw-normal pb-1 small">
-<li>{" ".join(process["full_command"])}</li>
-</ul>
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{idx}" aria-expanded="false" aria-controls="flush-collapseOne">
+        Process {idx + 1}: {process["command"]}
+      </button>
+    </h2>
+    <div id="flush-collapse{idx}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">{" ".join(process["full_command"])}</div>
+    </div>
+  </div>
 </div>
 """
-
                 dynamic_gpu_infos[str(gpu_id)] = {
                     # "load": {
                     #     "percent": gpu.memoryUtil * 100,
