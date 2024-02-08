@@ -179,10 +179,10 @@ class Monitor:
                 for idx, process in enumerate(gpu["processes"]):
                     command += \
                  f"""
-<button class="btn d-inline-flex align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#collapseExample{idx}" aria-expanded="true" aria-current="true">
-{process["command"]}
+<button class="btn d-inline-flex align-items-center rounded" data-bs-toggle="collapse" data-bs-target="#collapseExample{idx}" aria-expanded="false" aria-current="false">
+{idx}: {process["command"]}
 </button>
-<div class="collapse show" id="collapseExample{idx}" style="">
+<div class="collapse" id="collapseExample{idx}" style="">
   <ul class="list-unstyled fw-normal pb-1 small">
       <li>{" ".join(process["full_command"])}</li>
   </ul>
