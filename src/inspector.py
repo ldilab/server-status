@@ -181,12 +181,12 @@ class Monitor:
                  f"""
 <p>
   <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample{idx}" role="button" aria-expanded="false" aria-controls="collapseExample{idx}">
-    {gpu["command"]}
+    {process["command"]}
   </a>
 </p>
 <div class="collapse" id="collapseExample">
   <div class="card card-body">
-    {" ".join(gpu["full_command"])}
+    {" ".join(process["full_command"])}
   </div>
 </div>
 """

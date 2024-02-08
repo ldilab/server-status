@@ -3,6 +3,7 @@ version: '3.9'
 services:
   flask:
     privileged: true
+    pid: host
     build:
       context: ./
       dockerfile: Dockerfile-cpu
