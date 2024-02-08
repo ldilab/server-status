@@ -184,7 +184,7 @@ class Monitor:
     {process["command"]}
   </a>
 </p>
-<div class="collapse" id="collapseExample">
+<div class="collapse" id="collapseExample{idx}">
   <div class="card card-body">
     {" ".join(process["full_command"])}
   </div>
